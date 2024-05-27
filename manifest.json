@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "MetaLife Auto Leaving",
+  "description": "Google Meetを開始した時にMetaLifeを離席中にします。",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://app.metalife.co.jp/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
+}
