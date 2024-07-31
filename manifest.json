@@ -6,6 +6,7 @@
   "permissions": [
     "tabs",
     "activeTab",
+    "offscreen",
     "scripting"
   ],
   "host_permissions": [

@@ -1,3 +1,24 @@
+// KeepAlive用のOffscreenを作成する
+const setUpOffscreen = async () => {
+  await chrome.offscreen.createDocument({
+    url: chrome.runtime.getURL('offscreen.html'),
+    reasons: [
+      'BLOBS',
+    ],
+    justification: 'To keep service worker',
+  });
+};
+
+// 拡張機能インストール時
+chrome.runtime.onInstalled.addListener(() => {
+  setUpOffscreen();
+});
+
+// ブラウザ起動時
+chrome.runtime.onStartup.addListener(() => {
+  setUpOffscreen();
+});
+
 chrome.runtime.onMessage.addListener(({ type }) => {
   // Google Meet 開始時
   if (type === 'MEET_STARTED') {
