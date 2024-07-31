@@ -5,6 +5,10 @@
       return;
     }
 
+    if (window.location.pathname === '/landing') {
+      return;
+    }
+
     chrome.runtime.sendMessage({
       type: 'MEET_STARTED',
     });
