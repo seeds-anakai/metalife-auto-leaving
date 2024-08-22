@@ -19,6 +19,9 @@ chrome.runtime.onStartup.addListener(() => {
   setUpOffscreen();
 });
 
+// 離席中に切り替えたか
+let isLeaving = false;
+
 chrome.runtime.onMessage.addListener(({ type }) => {
   // Google Meet 開始時
   if (type === 'MEET_STARTED') {
@@ -29,10 +32,22 @@ chrome.runtime.onMessage.addListener(({ type }) => {
             tabId,
           },
           func: function () {
-            window.dispatchEvent(new KeyboardEvent('keydown', {
-              metaKey: true,
-              key: 'j',
-            }));
+            const { snapshotLength } = document.evaluate(
+              '//p[contains(text(), "ただいま離席中です")]',
+              document,
+              null,
+              XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+              null,
+            );
+
+            if (snapshotLength === 0) {
+              window.dispatchEvent(new KeyboardEvent('keydown', {
+                metaKey: true,
+                key: 'j',
+              }));
+
+              isLeaving = true;
+            }
           },
         });
       }
@@ -48,10 +63,14 @@ chrome.runtime.onMessage.addListener(({ type }) => {
             tabId,
           },
           func: function () {
-            window.dispatchEvent(new KeyboardEvent('keydown', {
-              metaKey: true,
-              key: 'i',
-            }));
+            if (isLeaving) {
+              window.dispatchEvent(new KeyboardEvent('keydown', {
+                metaKey: true,
+                key: 'i',
+              }));
+
+              isLeaving = false;
+            }
           },
         });
       }
